@@ -1,0 +1,85 @@
+\documentclass{article}  
+\usepackage{graphicx}
+\usepackage[parfill]{parskip}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+%\newcommand\stareq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily *}}}{=}}}
+\newcommand\stareq{\mathrel{\overset{*}{=}}}
+\newcommand{\myderiv}[1]{#1^\prime}
+\newcommand{\mySum}[3]{\ensuremath{\sum_{#1 = #2}^{#3}}}
+\begin{document}  
+
+Note 1.23\\
+We find first the generating function for the most compact codes that satisfy the requirement, i.e all the sequence of binary strings that do not have consecutive 1s. Denote this class as $W$, then we have:\\
+%\[
+%	W = {0} \times Seq( Seq(0) \times Seq(10 \times (Seq(0)))) + \\
+%		{10} \times Seq(0) \times Seq(10 \times (Seq(0)))
+%\] 
+\[
+	W = \{\epsilon\} + \{1\} \times (\{\epsilon\} + {0} \times W) + \{0\} \times W
+\]
+%or to put it in regular expression:
+%\[
+%	00^*{(100^*)}^* + 100^*{(100^*)}^*
+%\]
+Let 0 and 1 have weight 1, and denote the OGF as T(z). 
+%First note that
+\[0^*{(100^*)}^*  \mapsto \frac{1}{1-z} \cdot \frac{1}{1 - \frac{z^2}{1 - z}} =: f(z)\] 
+First note that:
+\begin{align*}
+	f(z) &:= \frac{1}{1-z - z^2} \\
+		&= \mySum{k}{0}{\infty} F_k z^k
+\end{align*}  
+where $F_k$ the $k$-th \emph{Fibonacci number} is.
+Then:
+%\begin{align*}
+%	T(z) &= z\cdot \frac{1}{1- z -z^2} + z^2 \cdot \frac{1}{1-z-z^2}\\
+%		&= (z + z^2) \mySum{k}{0}{\infty} F_k z^k \\
+%		&= \mySum{n}{0}{\infty} F_n \cdot z^{n+1} + \mySum{n}{0}{\infty}z^{n+2} \\
+%		&= F_0 \cdot z + \mySum{n}{0}{\infty} (F_{n+1} + F_{n}) \cdot z^{n+2}\\
+%		&= F_0 \cdot z + \mySum{n}{0}{\infty} F_{n+2} \cdot z^{n+2}, \text{since} F_0 = F_1 = 1\\
+%		&= F_1 \cdot z + \mySum{n}{2}{\infty} F_n \cdot z^n \\
+%		&= \mySum{n}{2}{\infty} F_n \cdot z^n
+%\end{align*}
+
+\begin{align*}
+	T(z) &= 1 + z(1+zT(z)) + zT(z)\\
+	\Rightarrow T(z) &= \frac{1+z}{1-z-z^2} \\
+					&= \mySum{n}{0}{\infty} F_n \cdot z^{n} + \mySum{n}{0}{\infty}F_n z^{n+1} \\
+					&= F_0 z + \mySum{n}{0}{\infty} (F_{n+1} + F_n) \cdot z^{n+1} \\
+					&= z + \mySum{n}{1}{\infty} F_{n+1} z^n \\
+					&= \mySum{n}{0}{\infty} F_{n+1} z^n
+\end{align*}
+
+Since this the best compact code we can achieve, given any other code scheme $C$, with $2^n \leq \mySum{j}{0}{L} C_j \leq \mySum{j}{0}{L} F_{j+1}$
+since 
+\[F_1 + F_2 + \cdots + F_{L} + F_{L+1} = F_{L+3} - 2\]
+
+We have:
+\[F_{L+3} \geq 2^n + 2\]
+for large $L$, \[F_{L+3} \approx \frac{1}{\sqrt{5}}\varphi^{L+3}\]
+so:
+\begin{align*}
+	\frac{1}{\sqrt{5}}\varphi^{L+3} &\geq 2^n + 2 \\
+	\Rightarrow \log_2 \varphi \cdot (L + 3) &\geq \log_2 {\sqrt{5}} + \log_2 (2^n + 2) \\
+	\Rightarrow L &\geq \lambda n + O(1), \quad \lambda = \frac{1}{\log_2 \varphi}
+\end{align*}
+Note 1.43\\
+Differentiate 
+\begin{align*}
+	\frac{H^{'}(z)}{H(z)} &= \myderiv{(\log (z))} + \sum \myderiv{-H_m \frac{1}{1-z^m}}\\
+	\Rightarrow \frac{zH^\prime(z)}{H(z)} &= 1 + \sum H_m \frac{mz^m}{1 - z^m}\\
+	\Rightarrow \sum_{n = 1}^{\infty} nH_n z^n &= \mySum{n}{1}{\infty}  nH_n z^n + \mySum{m}{1}{\infty} H_m \frac{mz^m}{1- z^m} \cdot \sum_{l = 1}^{\infty} H_l z^l \\
+	&= \mySum{n}{1}{\infty}  nH_n z^n + \mySum{m}{1}{\infty} H_m (mz^m \mySum{k}{0}{\infty}z^{mk}) \cdot \sum_{l = 1}^{\infty} H_l z^l \\
+	&= \mySum{n}{1}{\infty}  nH_n z^n + (\mySum{m}{1}{\infty} H_m \mySum{k}{0}{\infty}mz^{m(k+1)}) \cdot \sum_{l = 1}^{\infty} H_l z^l\\
+	&= \mySum{n}{1}{\infty}  nH_n z^n + \mySum{n}{1}{\infty}\sum_{m(k+1) = j} H_m \cdot m \cdot H_{n-j} \cdot z^{m(k+1) + z^{n-j}} \\
+	&= \mySum{n}{1}{\infty}  nH_n z^n + \mySum{n}{1}{\infty} (\sum_{m(k+1) = j} H_m \cdot m) \cdot H_{n-j} \cdot z^{j}\\
+	&= \mySum{n}{1}{\infty}  nH_n z^n +( \mySum{n}{1}{\infty} (\sum_{m | j} H_m \cdot m) \cdot H_{n-j} ) \cdot z^{j} \\
+	\Rightarrow (n-1)\cdot H_n &= \mySum{j}{1}{n-1} (\sum_{m | j} (H_m \cdot m)) \cdot H_{n-j}
+\end{align*}
+
+
+
+\end{document}
