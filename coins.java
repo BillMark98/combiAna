@@ -1,10 +1,11 @@
-public class helloWorld {
+public class coins {
     public static void main(String[] args) {
-        StdOut.println("Hello world");
+        // StdOut.println("Hello world");
         int N = 101;
         int[][] coins = new int[4][N];
-        calcuCombi(coins,1,5,10,25);
-
+        // calcuCombi(coins,1,5,10,25);
+        findMaxCombi(coins,100);
+        findCombi(1, 5, 20, 25, 100);
     }
     public static void resetArr(int[] list) {
         for (int i = 0; i < list.length; i++) {
@@ -17,11 +18,11 @@ public class helloWorld {
         int m1M = -1,m2M = -1,m3M = -1,m4M = -1;
         for (int m1 = 1; m1 <= N; m1++) {
             setArr(coins[0],m1);
-            for (int m2 = m1; m2 <= N; m2++) {
+            for (int m2 = m1 + 1; m2 <= N; m2++) {
                 polyaSetArr(coins[1],coins[0],m2);
-                for (int m3 = m2; m3 <= N; m3++) {
+                for (int m3 = m2 + 1; m3 <= N; m3++) {
                     polyaSetArr(coins[2],coins[1],m3);
-                    for (int m4 = m3; m4 <= N; m4++) {
+                    for (int m4 = m3 + 1; m4 <= N; m4++) {
                         polyaSetArr(coins[3],coins[2],m4);
                         if (coins[3][N] > max) {
                             max = coins[3][N];
@@ -69,5 +70,15 @@ public class helloWorld {
             }
             System.out.println();
         }
+    }
+
+    public static void findCombi(int m1, int m2, int m3, int m4, int N) {
+        int [][] coins = new int[4][N + 1];
+        setArr(coins[0],m1);
+        int [] arr = {m1,m2,m3,m4};
+        for (int i = 1; i < coins.length; i++) {
+            polyaSetArr(coins[i],coins[i-1],arr[i]);
+        }
+        System.out.printf("The total combi of %4d given by %4d %4d %4d %4d is %5d\n", N,m1,m2,m3,m4,coins[3][N]);
     }
 }
