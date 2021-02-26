@@ -1,11 +1,22 @@
 public class coins {
     public static void main(String[] args) {
         // StdOut.println("Hello world");
-        int N = 101;
+        int N = 21;
         int[][] coins = new int[4][N];
         // calcuCombi(coins,1,5,10,25);
-        findMaxCombi(coins,100);
-        findCombi(1, 5, 20, 25, 100);
+        N--;
+        findMaxCombi(coins,N);
+
+        for (int m1 = 1; m1 <= N; m1++) {
+            for (int m2 = m1+1; m2 <= N; m2++) {
+                for (int m3 = m2 + 1; m3 <= N; m3++) {
+                    for(int m4 = m3 + 1; m4 <= N; m4++) {
+                        findCombi(m1,m2,m3,m4,N);
+                    }
+                }
+            }
+        }
+        
     }
     public static void resetArr(int[] list) {
         for (int i = 0; i < list.length; i++) {
